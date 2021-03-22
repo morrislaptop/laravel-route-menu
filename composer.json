@@ -1,16 +1,16 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": ":package_description",
+    "name": "morrislaptop/laravel-route-menu",
+    "description": "Your route:list, sir.",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "morrislaptop",
+        "laravel-route-menu"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/morrislaptop/laravel-route-menu",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
+            "name": "Craig Morris",
+            "email": "craig.michael.morris@gmail.com",
             "role": "Developer"
         }
     ],
@@ -27,13 +27,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src",
-            "Spatie\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Morrislaptop\\LaravelRouteMenu\\": "src",
+            "Morrislaptop\\LaravelRouteMenu\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "Morrislaptop\\LaravelRouteMenu\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -47,10 +47,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
+                "Morrislaptop\\LaravelRouteMenu\\LaravelRouteMenuServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
+                "LaravelRouteMenu": "Morrislaptop\\LaravelRouteMenu\\LaravelRouteMenuFacade"
             }
         }
     },

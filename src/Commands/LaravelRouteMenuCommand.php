@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\Skeleton\Commands;
+namespace Morrislaptop\LaravelRouteMenu\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelRouteMenuCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-route-menu';
 
     public $description = 'My command';
 
