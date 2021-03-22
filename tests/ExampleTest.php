@@ -5,8 +5,14 @@ namespace Morrislaptop\LaravelRouteMenu\Tests;
 class ExampleTest extends TestCase
 {
     /** @test */
-    public function true_is_true()
+    public function true_generates_lists()
     {
-        $this->assertTrue(true);
+        // Arrange.
+
+        // Act.
+        $response = $this->artisan('route:menu');
+
+        // Assert.
+        $response->assertExitCode(0);
     }
 }
