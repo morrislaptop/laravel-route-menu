@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Foundation\Console\RouteListCommand;
 use ReflectionFunction;
+use ReflectionMethod;
 
 class LaravelRouteMenuCommand extends RouteListCommand
 {
@@ -99,9 +100,17 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
         $this->line("Middleware: " . $this->getMiddleware($route));
 
-        $closure = $route->getAction('uses');
-        $reflection = new ReflectionFunction($closure);
-        $this->line("Code: " . $reflection->getFileName() . ':' . $reflection->getStartLine());
+        if ($controller = $route->getAction('controller')) {
+            [$class, $method] = explode('@', $controller);
+            $reflection = new ReflectionMethod($class, $method);
+        }
+        else {
+            $closure = $route->getAction('uses');
+            $reflection = new ReflectionFunction($closure);
+        }
+
+        $fileName = str_replace(base_path() . '/', '', $reflection->getFileName());
+        $this->line("Code: " . $fileName . ':' . $reflection->getStartLine());
 
         $this->line('');
         $this->line('');
@@ -122,7 +131,6 @@ class LaravelRouteMenuCommand extends RouteListCommand
      */
     protected function getRouteInformation(Route $route)
     {
-        ray($route);
         return [
             'domain' => $route->domain(),
             'method' => implode('|', $route->methods()),
