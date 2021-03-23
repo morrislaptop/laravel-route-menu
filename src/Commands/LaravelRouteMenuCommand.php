@@ -180,8 +180,14 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     protected function resolveMethod(Route $route, $reflection)
     {
-        $class = $reflection instanceof ReflectionClass ? $reflection : null;
-        $class = $reflection instanceof ReflectionMethod ? $reflection->getDeclaringClass() : null;
+        $class = null;
+
+        if ($reflection instanceof ReflectionClass) {
+            $class = $reflection;
+        }
+        if ($reflection instanceof ReflectionMethod) {
+            $class = $reflection->getDeclaringClass();
+        }
 
         if ($class && $class->getName() === RedirectController::class) {
             return 'REDIRECT';
