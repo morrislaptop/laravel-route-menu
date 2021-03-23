@@ -1,4 +1,6 @@
-# Your route:list, sir.
+# Laravel Route Menu
+
+Your `route:list`, sir.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/morrislaptop/laravel-route-menu.svg?style=flat-square)](https://packagist.org/packages/morrislaptop/laravel-route-menu)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/morrislaptop/laravel-route-menu/run-tests?label=tests)](https://github.com/morrislaptop/laravel-route-menu/actions?query=workflow%3ATests+branch%3Amaster)
@@ -6,7 +8,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/morrislaptop/laravel-route-menu.svg?style=flat-square)](https://packagist.org/packages/morrislaptop/laravel-route-menu)
 
 
-Laravel's `route:list` isn't great on smaller terminals. 
+`route:list` isn't great on smaller terminals. 
 
 ![route:list](docs/route-list.png)
 
@@ -20,6 +22,7 @@ Features:
 * Groups routes by namespace or filename for easy navigating
 * Extracts parameters and their types
 * Displays an IDE friendly file path for code jumping 🌟
+* Extra support for `Route::redirect` and `Route::view` methods
 * Additional `file` filter to only show relevant routes by filename / namespace
 * Lots of 🏷️, 🎬, 🤹, 🖕, ☕️, 🏰, 🛫, 👀, ⚡, ☁️, 🌙, 🌅, 🔭, 💵, 🔐, 🛂, 👨‍🚀️
 
