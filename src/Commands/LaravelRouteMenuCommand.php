@@ -5,7 +5,9 @@ namespace Morrislaptop\LaravelRouteMenu\Commands;
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\RouteListCommand;
+use Illuminate\Routing\RedirectController;
 use Illuminate\Routing\Route;
+use Illuminate\Routing\ViewController;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use ReflectionClass;
@@ -124,16 +126,28 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     protected function displayRoute(Route $route): void
     {
-        $methods = collect($route->methods())->reject(fn (string $method) => $method === 'HEAD');
+        $reflection = $this->resolveReflection($route);
+        $method = $this->resolveMethod($route, $reflection);
+        $isSpecialMethod = in_array($method, ['REDIRECT', 'VIEW']);
         $padLength = 10;
 
         $this->line(
-            "<fg=yellow>" . implode('|', $methods->all()) . "</>"
+            "<fg=yellow>" . $method . "</>"
             . ' '
             . '/' . ltrim($route->uri(), '/')
         );
 
         $this->line('');
+
+        ray($route);
+
+        if ($method === 'REDIRECT') {
+            $this->line('👉 ' . $route->defaults['destination'] . ' ' . $route->defaults['status']);
+        }
+
+        if ($method === 'VIEW') {
+            $this->line('🎨 ' . 'resources/views/' . $route->defaults['view'] . '.php');
+        }
 
         if ($route->getName()) {
             $this->line('🏷️  ' . str_pad("Name: ", $padLength)  . $route->getName());
@@ -147,7 +161,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
             $this->line('🎬 ' . str_pad("Action: ", $padLength) . $route->getActionName());
         }
 
-        if ($params = $route->signatureParameters()) {
+        if (!$isSpecialMethod && $params = $route->signatureParameters()) {
             $this->line('🤹 ' . str_pad("Params: ", $padLength) . implode(', ', $this->paramString($params)));
         }
 
@@ -155,12 +169,31 @@ class LaravelRouteMenuCommand extends RouteListCommand
             $this->line('🖕 ' . str_pad("Middles: ", $padLength) . $middleware);
         }
 
-        $reflection = $this->resolveReflection($route);
-        $fileName = str_replace(base_path() . '/', '', $reflection->getFileName());
-        $this->line('☕️ ' . str_pad("Code: ", $padLength) . "<fg=green>" . $fileName . '</>:<fg=green>' . $reflection->getStartLine() . '</>');
+        if (!$isSpecialMethod) {
+            $fileName = str_replace(base_path() . '/', '', $reflection->getFileName());
+            $this->line('☕️ ' . str_pad("Code: ", $padLength) . "<fg=green>" . $fileName . '</>:<fg=green>' . $reflection->getStartLine() . '</>');
+        }
 
         $this->line('');
         $this->line('');
+    }
+
+    protected function resolveMethod(Route $route, $reflection)
+    {
+        $class = $reflection instanceof ReflectionClass ? $reflection : null;
+        $class = $reflection instanceof ReflectionMethod ? $reflection->getDeclaringClass() : null;
+
+        if ($class && $class->getName() === RedirectController::class) {
+            return 'REDIRECT';
+        }
+
+        if ($class && $class->getName() === ViewController::class) {
+            return 'VIEW';
+        }
+
+        return collect($route->methods())
+            ->reject(fn (string $method) => $method === 'HEAD')
+            ->implode(', ');
     }
 
     /**

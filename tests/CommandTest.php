@@ -71,6 +71,45 @@ class CommandTest extends TestCase
     }
 
     /** @test */
+    public function it_outputs_for_a_redirect()
+    {
+        // Arrange.
+        Route::redirect('/old-url', '/new-url');
+
+        // Act.
+        $this->artisan('route:menu')
+            ->expectsOutput('REDIRECT /old-url')
+            ->expectsOutput('👉 /new-url 302')
+            ->assertExitCode(0);
+    }
+
+    /** @test */
+    public function it_outputs_for_a_permanent_redirect()
+    {
+        // Arrange.
+        Route::permanentRedirect('/old-url', '/new-url');
+
+        // Act.
+        $this->artisan('route:menu')
+            ->expectsOutput('REDIRECT /old-url')
+            ->expectsOutput('👉 /new-url 301')
+            ->assertExitCode(0);
+    }
+
+    /** @test */
+    public function it_outputs_for_a_view()
+    {
+        // Arrange.
+        Route::view('/welcome', 'welcome');
+
+        // Act.
+        $this->artisan('route:menu')
+            ->expectsOutput('VIEW /welcome')
+            ->expectsOutput('🎨 resources/views/welcome.php')
+            ->assertExitCode(0);
+    }
+
+    /** @test */
     public function it_filters_out_based_on_namespace_or_file()
     {
         // Arrange.
