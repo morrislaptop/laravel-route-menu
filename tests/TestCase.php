@@ -3,8 +3,8 @@
 namespace Morrislaptop\LaravelRouteMenu\Tests;
 
 use Laravel\Fortify\FortifyServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Morrislaptop\LaravelRouteMenu\LaravelRouteMenuServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

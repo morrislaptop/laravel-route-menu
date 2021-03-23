@@ -3,20 +3,18 @@
 namespace Morrislaptop\LaravelRouteMenu\Commands;
 
 use Closure;
-use Exception;
-use ReflectionMethod;
-use ReflectionFunction;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Routing\Route;
 use Illuminate\Console\Command;
-use ReflectionFunctionAbstract;
-use Illuminate\Support\Collection;
-use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Foundation\Console\RouteListCommand;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use NunoMaduro\Collision\Highlighter;
+use ReflectionFunction;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
+use Symfony\Component\Console\Input\InputOption;
 
 class LaravelRouteMenuCommand extends RouteListCommand
 {
@@ -79,8 +77,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     protected function displayGroups(Collection $groups)
     {
-        foreach ($groups as $namespace => $routes)
-        {
+        foreach ($groups as $namespace => $routes) {
             $emoji = $this->getEmoji($namespace);
 
             $this->line("<bg=black;options=bold> $emoji $namespace </>");
@@ -95,8 +92,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     protected function getEmoji($namespace)
     {
-        switch ($namespace)
-        {
+        switch ($namespace) {
             case Str::contains($namespace, 'Fortify'):
                 return '🏰';
 
@@ -112,6 +108,31 @@ class LaravelRouteMenuCommand extends RouteListCommand
             case Str::contains($namespace, 'Vapor'):
                 return '☁️';
 
+            case Str::contains($namespace, 'Dusk'):
+                return '🌙';
+
+            case Str::contains($namespace, 'Horizon'):
+                return '🌅';
+
+            case Str::contains($namespace, 'Telescope'):
+                return '🔭';
+
+            case Str::contains($namespace, 'Cashier'):
+            case Str::contains($namespace, 'Paddle'):
+                return '💵';
+
+            case Str::contains($namespace, 'Sanctum'):
+                return '🔐';
+
+            case Str::contains($namespace, 'Passport'):
+                return '🛂';
+
+            case Str::contains($namespace, 'Nova'):
+                return '👨‍🚀️';
+
+            case Str::contains($namespace, 'Horizon'):
+                return '🌅';
+
             default:
                 return '💻';
         }
@@ -119,7 +140,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     protected function displayRoute(Route $route, int $i)
     {
-        $methods = collect($route->methods())->reject( fn ($method) => $method === 'HEAD');
+        $methods = collect($route->methods())->reject(fn ($method) => $method === 'HEAD');
         $padLength = 10;
 
         $this->line(
@@ -178,10 +199,11 @@ class LaravelRouteMenuCommand extends RouteListCommand
     {
         if ($controller = $route->getAction('controller')) {
             [$class, $method] = Str::parseCallback($controller, '__invoke');
+
             return new ReflectionMethod($class, $method);
-        }
-        else {
+        } else {
             $closure = $route->getAction('uses');
+
             return new ReflectionFunction($closure);
         }
     }
@@ -204,8 +226,8 @@ class LaravelRouteMenuCommand extends RouteListCommand
         return [
             'domain' => $route->domain(),
             'method' => implode('|', $route->methods()),
-            'uri'    => $route->uri(),
-            'name'   => $route->getName(),
+            'uri' => $route->uri(),
+            'name' => $route->getName(),
             'action' => ltrim($route->getActionName(), '\\'),
             'middleware' => $this->getMiddleware($route),
         ];

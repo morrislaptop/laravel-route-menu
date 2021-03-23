@@ -2,9 +2,9 @@
 
 namespace Morrislaptop\LaravelRouteMenu;
 
+use Morrislaptop\LaravelRouteMenu\Commands\LaravelRouteMenuCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Morrislaptop\LaravelRouteMenu\Commands\LaravelRouteMenuCommand;
 
 class LaravelRouteMenuServiceProvider extends PackageServiceProvider
 {
