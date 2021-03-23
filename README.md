@@ -6,48 +6,41 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/morrislaptop/laravel-route-menu.svg?style=flat-square)](https://packagist.org/packages/morrislaptop/laravel-route-menu)
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Laravel's `route:list` isn't great on smaller terminals. 
 
-## Support us
+![route:list](docs/route-list.png)
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/package-laravel-route-menu-laravel.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/package-laravel-route-menu-laravel)
+`route-menu` gives you a beautiful route list which is friendly on smaller terminals and brings a few new features in.
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+![route:menu](docs/route-menu.png)
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Features:
+
+* Shows all routes in a list view for smaller terminals
+* Groups routes by namespace or filename for easy navigating
+* Extracts parameters and their types
+* Displays an IDE friendly file path for code jumping 🌟
+* Additional `file` filter to only show relevant routes by filename / namespace
+* Lots of 🏷️, 🎬, 🤹, 🖕, ☕️, 🏰, 🛫, 👀, ⚡, ☁️, 🌙, 🌅, 🔭, 💵, 🔐, 🛂, 👨‍🚀️
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require morrislaptop/laravel-route-menu
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --provider="Morrislaptop\LaravelRouteMenu\LaravelRouteMenuServiceProvider" --tag="route-menu-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-```bash
-php artisan vendor:publish --provider="Morrislaptop\LaravelRouteMenu\LaravelRouteMenuServiceProvider" --tag="route-menu-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
+composer require morrislaptop/laravel-route-menu --dev
 ```
 
 ## Usage
 
 ```php
-$laravel-route-menu = new Morrislaptop\LaravelRouteMenu();
-echo $laravel-route-menu->echoPhrase('Hello, Morrislaptop!');
+php artisan route:menu
+```
+
+In addition to the `name`, `method` and `path` filters on `route:list`, an additional `file` filter is supported which will filter the routes based on the namespace (for classes) or file (for Closures).
+
+```php
+php artisan route:menu --file=app
 ```
 
 ## Testing
