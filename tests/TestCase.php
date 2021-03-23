@@ -2,7 +2,6 @@
 
 namespace Morrislaptop\LaravelRouteMenu\Tests;
 
-use Laravel\Fortify\FortifyServiceProvider;
 use Morrislaptop\LaravelRouteMenu\LaravelRouteMenuServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -12,7 +11,6 @@ class TestCase extends Orchestra
     {
         return [
             LaravelRouteMenuServiceProvider::class,
-            FortifyServiceProvider::class,
         ];
     }
 }

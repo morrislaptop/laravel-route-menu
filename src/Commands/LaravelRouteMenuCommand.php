@@ -6,10 +6,10 @@ use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\RouteListCommand;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use ReflectionClass;
 use ReflectionFunction;
-use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -25,13 +25,15 @@ class LaravelRouteMenuCommand extends RouteListCommand
     {
         $this->router->flushMiddlewareGroups();
 
-        if (empty($this->router->getRoutes())) {
+        if (empty($this->router->getRoutes()->getRoutes())) {
             $this->error("Your application doesn't have any routes.");
+
             return;
         }
 
         if (empty($routes = $this->getRoutes())) {
             $this->error("Your application doesn't have any routes matching the given criteria.");
+
             return;
         }
 
@@ -63,12 +65,16 @@ class LaravelRouteMenuCommand extends RouteListCommand
         )->all();
     }
 
-    protected function getNamespaceOrFile(Route $route)
+    protected function getNamespaceOrFile(Route $route): string
     {
         $reflection = $this->resolveReflection($route);
 
         if ($reflection instanceof ReflectionMethod) {
             return $reflection->getDeclaringClass()->getNamespaceName();
+        }
+
+        if ($reflection instanceof ReflectionClass) {
+            return $reflection->getNamespaceName();
         }
 
         return str_replace(base_path() . '/', '', $reflection->getFileName());
@@ -77,12 +83,12 @@ class LaravelRouteMenuCommand extends RouteListCommand
     /**
      * @param array<string, Route[]> $groups
      */
-    protected function displayGroups(array $groups)
+    protected function displayGroups(array $groups): void
     {
         foreach ($groups as $namespace => $routes) {
             $emoji = $this->getEmoji($namespace);
 
-            $this->line("<bg=black;options=bold> $emoji $namespace </>");
+            $this->line("<bg=black;options=bold> $emoji $namespace</>");
 
             $this->line('-----');
 
@@ -92,54 +98,33 @@ class LaravelRouteMenuCommand extends RouteListCommand
         }
     }
 
-    protected function getEmoji(string $namespace)
+    protected function getEmoji(string $namespace): string
     {
-        switch ($namespace) {
-            case Str::contains($namespace, 'Fortify'):
-                return '🏰';
+        $map = collect([
+            'Fortify' => '🏰',
+            'Jetstream' => '🛫',
+            'Livewire' => '👀',
+            'Spark' => '⚡',
+            'Vapor' => '☁️',
+            'Dusk' => '🌙',
+            'Horizon' => '🌅',
+            'Telescope' => '🔭',
+            'Cashier' => '💵',
+            'Padde' => '💵',
+            'Sanctum' => '🔐',
+            'Passport' => '🛂',
+            'Nova' => '👨‍🚀️',
+        ]);
 
-            case Str::contains($namespace, 'Jetstream'):
-                return '🛫';
-
-            case Str::contains($namespace, 'Livewire'):
-                return '👀';
-
-            case Str::contains($namespace, 'Spark'):
-                return '⚡';
-
-            case Str::contains($namespace, 'Vapor'):
-                return '☁️';
-
-            case Str::contains($namespace, 'Dusk'):
-                return '🌙';
-
-            case Str::contains($namespace, 'Horizon'):
-                return '🌅';
-
-            case Str::contains($namespace, 'Telescope'):
-                return '🔭';
-
-            case Str::contains($namespace, 'Cashier'):
-            case Str::contains($namespace, 'Paddle'):
-                return '💵';
-
-            case Str::contains($namespace, 'Sanctum'):
-                return '🔐';
-
-            case Str::contains($namespace, 'Passport'):
-                return '🛂';
-
-            case Str::contains($namespace, 'Nova'):
-                return '👨‍🚀️';
-
-            default:
-                return '💻';
-        }
+        return $map->first(
+            fn ($_e, $search) => Str::contains($namespace, $search),
+            '💻'
+        );
     }
 
-    protected function displayRoute(Route $route)
+    protected function displayRoute(Route $route): void
     {
-        $methods = collect($route->methods())->reject(fn ($method) => $method === 'HEAD');
+        $methods = collect($route->methods())->reject(fn (string $method) => $method === 'HEAD');
         $padLength = 10;
 
         $this->line(
@@ -163,7 +148,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
         }
 
         if ($params = $route->signatureParameters()) {
-            $this->line('🤹 ' . str_pad("Params: ", $padLength) . $this->paramString($params)->implode(', '));
+            $this->line('🤹 ' . str_pad("Params: ", $padLength) . implode(', ', $this->paramString($params)));
         }
 
         if ($middleware = $this->getMiddleware($route)) {
@@ -179,7 +164,8 @@ class LaravelRouteMenuCommand extends RouteListCommand
     }
 
     /**
-     * @param $params ReflectionParameter[]
+     * @param ReflectionParameter[] $params
+     * @return string[]
      */
     protected function paramString($params)
     {
@@ -191,20 +177,24 @@ class LaravelRouteMenuCommand extends RouteListCommand
             $str .= $param->isDefaultValueAvailable() ? ' = <fg=green>' . $param->getDefaultValue() . '</>' : '';
 
             return $str;
-        });
+        })->all();
     }
 
-    protected function resolveReflection(Route $route): ReflectionFunctionAbstract
+    protected function resolveReflection(Route $route)
     {
-        if ($controller = $route->getAction('controller')) {
-            [$class, $method] = Str::parseCallback($controller, '__invoke');
-
-            return new ReflectionMethod($class, $method);
-        } else {
+        if (! $route->getAction('controller')) {
             $closure = $route->getAction('uses');
 
             return new ReflectionFunction($closure);
         }
+
+        [$class, $method] = Str::parseCallback($route->getAction('controller'), '__invoke');
+
+        if (is_a($class, Component::class, true)) {
+            return new ReflectionClass($class);
+        }
+
+        return new ReflectionMethod($class, $method);
     }
 
     protected function getMiddleware($route)
@@ -212,24 +202,6 @@ class LaravelRouteMenuCommand extends RouteListCommand
         return collect($this->router->gatherRouteMiddleware($route))->map(function ($middleware) {
             return $middleware instanceof Closure ? 'Closure' : $middleware;
         })->implode(", ");
-    }
-
-    /**
-     * Get the route information for a given route.
-     *
-     * @param  \Illuminate\Routing\Route  $route
-     * @return array
-     */
-    protected function getRouteInformation(Route $route)
-    {
-        return [
-            'domain' => $route->domain(),
-            'method' => implode('|', $route->methods()),
-            'uri' => $route->uri(),
-            'name' => $route->getName(),
-            'action' => ltrim($route->getActionName(), '\\'),
-            'middleware' => $this->getMiddleware($route),
-        ];
     }
 
     protected function filterRawRoute(Route $route): ?Route
