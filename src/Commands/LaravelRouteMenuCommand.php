@@ -8,7 +8,6 @@ use Illuminate\Foundation\Console\RouteListCommand;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use NunoMaduro\Collision\Highlighter;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
@@ -22,20 +21,18 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
     public $description = 'Your `route:list`, sir.';
 
-    protected Highlighter $highlighter;
-
-    public function handle(Highlighter $highlighter = null)
+    public function handle()
     {
-        $this->highlighter = $highlighter;
-
         $this->router->flushMiddlewareGroups();
 
         if (empty($this->router->getRoutes())) {
-            return $this->error("Your application doesn't have any routes.");
+            $this->error("Your application doesn't have any routes.");
+            return;
         }
 
         if (empty($routes = $this->getRoutes())) {
-            return $this->error("Your application doesn't have any routes matching the given criteria.");
+            $this->error("Your application doesn't have any routes matching the given criteria.");
+            return;
         }
 
         $groups = $this->groupRoutes($routes);
@@ -51,17 +48,19 @@ class LaravelRouteMenuCommand extends RouteListCommand
     protected function getRoutes()
     {
         return collect($this->router->getRoutes())
-            ->filter(fn (Route $route) => $this->filterRawRoute($route));
+            ->filter(fn (Route $route) => $this->filterRawRoute($route))
+            ->all();
     }
 
     /**
      * @param Route[] $routes
+     * @return array<string, Route[]>
      */
-    protected function groupRoutes(Collection $routes)
+    protected function groupRoutes(array $routes)
     {
-        return $routes->groupBy(
+        return collect($routes)->groupBy(
             fn (Route $route) => $this->getNamespaceOrFile($route)
-        );
+        )->all();
     }
 
     protected function getNamespaceOrFile(Route $route)
@@ -75,7 +74,10 @@ class LaravelRouteMenuCommand extends RouteListCommand
         return str_replace(base_path() . '/', '', $reflection->getFileName());
     }
 
-    protected function displayGroups(Collection $groups)
+    /**
+     * @param array<string, Route[]> $groups
+     */
+    protected function displayGroups(array $groups)
     {
         foreach ($groups as $namespace => $routes) {
             $emoji = $this->getEmoji($namespace);
@@ -84,13 +86,13 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
             $this->line('-----');
 
-            $routes->map(
-                fn (Route $route, $i) => $this->displayRoute($route, $i)
-            );
+            foreach ($routes as $route) {
+                $this->displayRoute($route);
+            }
         }
     }
 
-    protected function getEmoji($namespace)
+    protected function getEmoji(string $namespace)
     {
         switch ($namespace) {
             case Str::contains($namespace, 'Fortify'):
@@ -130,15 +132,12 @@ class LaravelRouteMenuCommand extends RouteListCommand
             case Str::contains($namespace, 'Nova'):
                 return '👨‍🚀️';
 
-            case Str::contains($namespace, 'Horizon'):
-                return '🌅';
-
             default:
                 return '💻';
         }
     }
 
-    protected function displayRoute(Route $route, int $i)
+    protected function displayRoute(Route $route)
     {
         $methods = collect($route->methods())->reject(fn ($method) => $method === 'HEAD');
         $padLength = 10;
@@ -233,19 +232,13 @@ class LaravelRouteMenuCommand extends RouteListCommand
         ];
     }
 
-    /**
-     * Filter the route by URI and / or name.
-     *
-     * @param  array  $route
-     * @return array|null
-     */
-    protected function filterRawRoute(Route $route)
+    protected function filterRawRoute(Route $route): ?Route
     {
         if (($this->option('name') && ! Str::contains($route->getName(), $this->option('name'))) ||
              $this->option('path') && ! Str::contains($route->uri(), $this->option('path')) ||
              $this->option('file') && ! Str::contains(strtolower($this->getNamespaceOrFile($route)), strtolower($this->option('file'))) ||
              $this->option('method') && ! Str::contains(implode('|', $route->methods()), strtoupper($this->option('method')))) {
-            return;
+            return null;
         }
 
         return $route;
