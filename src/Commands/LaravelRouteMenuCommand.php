@@ -161,7 +161,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
             $this->line('🎬 ' . str_pad("Action: ", $padLength) . $route->getActionName());
         }
 
-        if (!$isSpecialMethod && $params = $route->signatureParameters()) {
+        if (! $isSpecialMethod && $params = $route->signatureParameters()) {
             $this->line('🤹 ' . str_pad("Params: ", $padLength) . implode(', ', $this->paramString($params)));
         }
 
@@ -169,7 +169,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
             $this->line('🖕 ' . str_pad("Middles: ", $padLength) . $middleware);
         }
 
-        if (!$isSpecialMethod) {
+        if (! $isSpecialMethod) {
             $fileName = str_replace(base_path() . '/', '', $reflection->getFileName());
             $this->line('☕️ ' . str_pad("Code: ", $padLength) . "<fg=green>" . $fileName . '</>:<fg=green>' . $reflection->getStartLine() . '</>');
         }
