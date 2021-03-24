@@ -141,8 +141,6 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
         $this->line('');
 
-        ray($route);
-
         if ($method === 'REDIRECT') {
             $this->line('👉 ' . $route->defaults['destination'] . ' ' . $route->defaults['status']);
         }
