@@ -12,7 +12,7 @@ Your `route:list`, sir.
 
 ![route:list](docs/route-list.png)
 
-`route-menu` gives you a beautiful route list which is friendly on smaller terminals and brings a few new features in.
+`route:menu` gives you a beautiful route list which is friendly on smaller terminals and brings a few new features in.
 
 ![route:menu](docs/route-menu.png)
 
