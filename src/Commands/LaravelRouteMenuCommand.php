@@ -114,7 +114,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
             'Horizon' => '🌅',
             'Telescope' => '🔭',
             'Cashier' => '💵',
-            'Padde' => '💵',
+            'Paddle' => '💵',
             'Sanctum' => '🔐',
             'Passport' => '🛂',
             'Nova' => '👨‍🚀️',
