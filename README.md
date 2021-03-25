@@ -24,7 +24,7 @@ Features:
 * Displays an IDE friendly file path for code jumping 🌟
 * Extra support for `Route::redirect` and `Route::view` methods
 * Additional `file` filter to only show relevant routes by filename / namespace
-* Lots of 🏷️, 🎬, 🤹, 🖕, ☕️, 🏰, 🛫, 👀, ⚡, ☁️, 🌙, 🌅, 🔭, 💵, 🔐, 🛂, 👨‍🚀️
+* Lots of 🏷️, 🎬, 🤹, 🧅, ☕️, 🏰, 🛫, 👀, ⚡, ☁️, 🌙, 🌅, 🔭, 💵, 🔐, 🛂, 👨‍🚀️
 
 ## Installation
 
