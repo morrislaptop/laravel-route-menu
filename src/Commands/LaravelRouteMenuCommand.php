@@ -166,7 +166,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
         }
 
         if ($middleware = $this->getMiddleware($route)) {
-            $this->line('🖕 ' . str_pad("Middles: ", $padLength) . $middleware);
+            $this->line('🧅 ' . str_pad("Middles: ", $padLength) . $middleware);
         }
 
         if (! $isSpecialMethod) {
