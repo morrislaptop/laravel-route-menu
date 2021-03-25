@@ -26,7 +26,7 @@ class CommandTest extends TestCase
             ->expectsOutput('🌏 Domain:   google.com')
             ->expectsOutput('🎬 Action:   Closure')
             ->expectsOutput('🤹 Params:   int $answer')
-            ->expectsOutput('🖕 Middles:  web')
+            ->expectsOutput('🧅 Middles:  web')
             ->expectsOutput('☕️ Code:     ' . __FILE__ . ':' . 16)
             ->assertExitCode(0);
     }
