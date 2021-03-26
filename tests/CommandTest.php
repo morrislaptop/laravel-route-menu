@@ -71,6 +71,19 @@ class CommandTest extends TestCase
     }
 
     /** @test */
+    public function it_outputs_for_inertia_view()
+    {
+        // Arrange.
+        Route::inertia('/some-url', 'SomePage');
+
+        // Act.
+        $this->artisan('route:menu')
+            ->expectsOutput(' ⏩ Inertia')
+            ->expectsOutput('🎨 resources/js/pages/SomePage.vue')
+            ->assertExitCode(0);
+    }
+
+    /** @test */
     public function it_outputs_for_a_redirect()
     {
         // Arrange.

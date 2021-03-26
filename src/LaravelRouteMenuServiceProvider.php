@@ -17,7 +17,6 @@ class LaravelRouteMenuServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-route-menu')
-            ->hasConfigFile()
             ->hasCommand(LaravelRouteMenuCommand::class);
     }
 }

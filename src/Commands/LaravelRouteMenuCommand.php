@@ -9,6 +9,7 @@ use Illuminate\Routing\RedirectController;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\ViewController;
 use Illuminate\Support\Str;
+use Inertia\Controller as InertiaController;
 use Livewire\Component;
 use ReflectionClass;
 use ReflectionFunction;
@@ -108,6 +109,7 @@ class LaravelRouteMenuCommand extends RouteListCommand
             'Fortify' => '🏰',
             'Jetstream' => '🛫',
             'Livewire' => '👀',
+            'Inertia' => '⏩',
             'Spark' => '⚡',
             'Vapor' => '☁️',
             'Dusk' => '🌙',
@@ -147,6 +149,11 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
         if ($method === 'VIEW') {
             $this->line('🎨 ' . 'resources/views/' . $route->defaults['view'] . '.php');
+        }
+
+        // @todo Find relevant file for React, Svelte, Typescript etc..
+        if ($method === 'INERTIA') {
+            $this->line('🎨 ' . 'resources/js/pages/' . $route->defaults['component'] . '.vue');
         }
 
         if ($route->getName()) {
@@ -191,6 +198,10 @@ class LaravelRouteMenuCommand extends RouteListCommand
 
         if ($class && $class->getName() === RedirectController::class) {
             return 'REDIRECT';
+        }
+
+        if ($class && $class->getName() === InertiaController::class) {
+            return 'INERTIA';
         }
 
         if ($class && $class->getName() === ViewController::class) {

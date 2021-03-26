@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.18",
+        "inertiajs/inertia-laravel": "^0.4.0",
         "livewire/livewire": "^2.4",
         "orchestra/testbench": "^5.0|^6.13",
         "phpunit/phpunit": "^9.3",
