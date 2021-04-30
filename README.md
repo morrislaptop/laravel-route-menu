@@ -7,11 +7,6 @@ Your `route:list`, sir.
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/morrislaptop/laravel-route-menu/Check%20&%20fix%20styling?label=code%20style)](https://github.com/morrislaptop/laravel-route-menu/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/morrislaptop/laravel-route-menu.svg?style=flat-square)](https://packagist.org/packages/morrislaptop/laravel-route-menu)
 
-
-`route:list` isn't great on smaller terminals. 
-
-![route:list](docs/route-list.png)
-
 `route:menu` gives you a beautiful route list which is friendly on smaller terminals and brings a few new features in.
 
 ![route:menu](docs/route-menu.png)
